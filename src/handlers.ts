@@ -104,8 +104,8 @@ async function queryAddress(accountName: string, rpc: JsonRpc) {
         retry--;
         try {
             result = await rpc.get_table_rows({
-                code: 'eosio.evm',
-                scope: 'eosio.evm',
+                code: 'evmcontract1',
+                scope: 'evmcontract1',
                 table: 'account',
                 key_type: 'i64',
                 index_position: 3,

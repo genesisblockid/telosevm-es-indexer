@@ -112,8 +112,8 @@ export function extractShipTraces(data: ShipTransactionTrace[]): Array<{trace: E
 
 export function extractGlobalContractRow(contractRows: Array<any>): any {
    for (const row of contractRows) {
-        if (row.code === 'eosio' &&
-            row.scope ==='eosio' &&
+        if (row.code === 'vexcore' &&
+            row.scope ==='vexcore' &&
             row.table === 'global')
             return row
    }

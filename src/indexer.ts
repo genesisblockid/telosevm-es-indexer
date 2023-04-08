@@ -188,7 +188,7 @@ export class TEVMIndexer {
             "delta": new StorageEosioDelta({
                 "@timestamp": blockTimestamp.format(),
                 "block_num": block.nativeBlockNumber,
-                "code": "eosio",
+                "code": "vexcore",
                 "table": "global",
                 "@global": {
                     "block_num": block.evmBlockNumber
@@ -298,10 +298,10 @@ export class TEVMIndexer {
 
         // traces
         let gasUsedBlock = new BN(0);
-        const systemAccounts = [ 'eosio', 'eosio.stake', 'eosio.ram' ];
+        const systemAccounts = [ 'vexcore', 'vex.stake', 'vex.ram' ];
         const contractWhitelist = [
-            "eosio.evm", "eosio.token",  // evm
-            "eosio.msig"  // deferred transaction sig catch
+            "evmcontract1", "vex.token",  // evm
+            "vex.msig"  // deferred transaction sig catch
         ];
         const actionWhitelist = [
             "raw", "withdraw", "transfer",  // evm
@@ -321,13 +321,13 @@ export class TEVMIndexer {
 
             // discard transfers to accounts other than eosio.evm
             // and transfers from system accounts
-            if ((action.act.name == "transfer" && action.receiver != "eosio.evm") ||
+            if ((action.act.name == "transfer" && action.receiver != "evmcontract1") ||
                 (action.act.name == "transfer" && action.act.data.from in systemAccounts))
                 continue;
 
 
             let evmTx: StorageEvmTransaction | TxDeserializationError = null;
-            if (action.act.account == "eosio.evm") {
+            if (action.act.account == "evmcontract1") {
                 if (action.act.name == "raw") {
                     evmTx = await handleEvmTx(
                         block.blockInfo.this_block.block_id,
@@ -347,9 +347,9 @@ export class TEVMIndexer {
                         gasUsedBlock
                     );
                 }
-            } else if (action.act.account == "eosio.token" &&
+            } else if (action.act.account == "vex.token" &&
                 action.act.name == "transfer" &&
-                action.act.data.to == "eosio.evm") {
+                action.act.data.to == "evmcontract1") {
                 evmTx = await handleEvmDeposit(
                     block.blockInfo.this_block.block_id,
                     evmTransactions.length,
@@ -492,7 +492,7 @@ export class TEVMIndexer {
             irreversibleOnly: this.irreversibleOnly
         });
         this.reader.events.on('block', this.processBlock.bind(this));
-        ['eosio', 'eosio.token', 'eosio.msig', 'eosio.evm'].forEach(c => {
+        ['vexcore', 'vex.token', 'vex.msig', 'evmcontract1'].forEach(c => {
             const abi = ABI.from(JSON.parse(readFileSync(`src/abis/${c}.json`).toString()));
             this.reader.addContract(c, abi);
         })

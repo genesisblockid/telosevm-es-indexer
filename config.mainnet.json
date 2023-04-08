@@ -1,9 +1,9 @@
 {
-    "chainName": "telos-mainnet",
-    "chainId": 40,
+    "chainName": "vex-mainnet",
+    "chainId": 95,
 
-    "endpoint": "http://mainnet.telos.net",
-    "wsEndpoint": "ws://api1.hosts.caleos.io:18999",
+    "endpoint": "http://v2.vexascan.com:2096",
+    "wsEndpoint": "ws://v2.vexascan.com:2096:18999",
 
     "evmDeployBlock": 180698860,
     "evmPrevHash": "",
